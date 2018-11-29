@@ -1,0 +1,23 @@
+{
+  "user": {
+    "accessToken": "<ACCESS_TOKEN>",
+    "owner": "<WHO?>"
+  },
+  "labels": [{
+    "name": "Status: backlog",
+    "color": "26a69a",
+    "default": true
+  }, {
+    "name": "Status: doing",
+    "color": "ffc107"
+  }, {
+    "name": "Status: review",
+    "color": "4527a0"
+  }, {
+    "name": "Status: done",
+    "color": "b2ff59"
+  }, {
+    "name": "please_help",
+    "color": "dd2c00"
+  }]
+}
