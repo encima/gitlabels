@@ -15,8 +15,9 @@ type User struct {
 }
 
 type Config struct {
-	User   User
-	Labels []github.Label
+	User         User
+	Repositories []string
+	Labels       []github.Label
 }
 
 //loadConfig loads specified file from the config path and sets it in the viper instance
@@ -31,6 +32,15 @@ func loadConfig(path string) Config {
 	err = viper.Unmarshal(&config)
 	handleErr(err)
 	return config
+}
+
+func repoInList(targetRepo string, repoList []string) bool {
+	for _, repo := range repoList {
+		if repo == targetRepo {
+			return true
+		}
+	}
+	return false
 }
 
 func handleErr(err error) {
@@ -56,23 +66,26 @@ func main() {
 
 	for _, v := range repos {
 		repo := v.GetName()
-		fmt.Println(v.GetFullName())
-		labels, _, err := client.Issues.ListLabels(ctx, config.User.Owner, v.GetName(), nil)
-		handleErr(err)
-
-		for _, v := range labels {
-			lblName := v.GetName()
-			fmt.Println(v.GetName())
-			_, err := client.Issues.DeleteLabel(ctx, config.User.Owner, repo, lblName)
+		// modify labels only in config-specified repositories
+		if repoInList(repo, config.Repositories) {
+			fmt.Println(v.GetFullName())
+			labels, _, err := client.Issues.ListLabels(ctx, config.User.Owner, v.GetName(), nil)
 			handleErr(err)
-			fmt.Println("Deleted")
-		}
 
-		for _, lbl := range config.Labels {
-			fmt.Println(lbl)
-			res, _, err := client.Issues.CreateLabel(ctx, config.User.Owner, repo, &lbl)
-			handleErr(err)
-			fmt.Println("Created Label", res)
+			for _, v := range labels {
+				lblName := v.GetName()
+				fmt.Println(v.GetName())
+				_, err := client.Issues.DeleteLabel(ctx, config.User.Owner, repo, lblName)
+				handleErr(err)
+				fmt.Println("Deleted")
+			}
+
+			for _, lbl := range config.Labels {
+				fmt.Println(lbl)
+				res, _, err := client.Issues.CreateLabel(ctx, config.User.Owner, repo, &lbl)
+				handleErr(err)
+				fmt.Println("Created Label", res)
+			}
 		}
 	}
 }
