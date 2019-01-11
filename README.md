@@ -12,5 +12,4 @@ Add your label names and colors to the file also (you can provide descriptions a
 ## TODO
 
 * Options to delete all existing labels
-* Options to specify repos
 * Add issue templates also

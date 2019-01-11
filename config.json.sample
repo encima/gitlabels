@@ -3,6 +3,7 @@
     "accessToken": "<ACCESS_TOKEN>",
     "owner": "<WHO?>"
   },
+  "repositories": ["<REPO_1>", "<REPO_2>"],
   "labels": [{
     "name": "Status: backlog",
     "color": "26a69a",
